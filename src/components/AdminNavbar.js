@@ -89,7 +89,7 @@ export default function AdminNavbar() {
             <Grid item>
               <img
                 onClick={handleLogoClick}
-                src="/images/vnrlogo.png" // Use the logoUrl directly
+                src="https://en.wikipedia.org/static/images/icons/wikipedia.png" // Use the logoUrl directly
                 alt="Logo"
                 style={{
                   width: "40px",

@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/auth";
 import RegistrationProvider from "./pages/User/RegistrationForm";
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <AuthProvider>
     <BrowserRouter>

@@ -171,7 +171,7 @@ export default function Login() {
               <div className="flex justify-center">
                 <form>
                   <h3 className="text-2xl pb-5 pt-3 font-semibold text-center text-gray-700">
-                    STUDENT LOGIN
+                   LOGIN
                   </h3>
                   <div
                     className={`flex flex-row p-4 px-10 mb-2 ${
@@ -262,7 +262,7 @@ export default function Login() {
                 </form>
               </div>
             </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
+            {/* <CustomTabPanel value={value} index={1}>
               <div className="flex justify-center">
                 <form>
                   <h3 className="text-2xl pb-5 pt-3 font-semibold text-center text-gray-700">
@@ -348,7 +348,7 @@ export default function Login() {
                   </div>
                 </form>
               </div>
-            </CustomTabPanel>
+            </CustomTabPanel> */}
           </Box>
         </Container>
       </div>

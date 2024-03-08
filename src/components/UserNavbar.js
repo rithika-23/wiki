@@ -11,6 +11,8 @@ import { useState, useEffect } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import axios from "axios";
 
+
+
 export default function UserNavbar() {
   const { auth, logout } = useAuth();
   const navigate = useNavigate();
@@ -66,21 +68,23 @@ export default function UserNavbar() {
     }
   };
 
+  
   useEffect(() => {
     fetchHeader(); // Fetch the header when the component mounts
   }, []);
 
+  
   return (
     <div className="flex w-full justify-center shadow-md">
       <div className=" h-[10vh] flex items-center justify-between w-[95vw]">
         <div className="flex gap-4 ">
           <div>
             <img
-              src="/images/vnrlogo.png"
+              src="https://en.wikipedia.org/static/images/icons/wikipedia.png"
               alt="Logo"
               style={{
-                width: "40px",
-                height: "40px",
+                width: "60px",
+                height: "60px",
                 cursor: "pointer",
               }}
               onClick={handleLogoClick}
@@ -189,6 +193,8 @@ export default function UserNavbar() {
           )}
         </div>
       </div>
+
+      
     </div>
   );
 }

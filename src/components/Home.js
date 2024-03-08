@@ -158,20 +158,20 @@ export default function Home() {
                 alignItems: "center",
               }}
             >
-              <Tabs
+              {/* <Tabs
                 value={value}
                 onChange={handleChange}
                 aria-label="basic tabs example"
               >
                 <Tab label="Student" {...a11yProps(0)} />
                 <Tab label="Instructor" {...a11yProps(1)} />
-              </Tabs>
+              </Tabs> */}
             </Box>
             <CustomTabPanel value={value} index={0}>
               <div className="flex justify-center">
                 <form>
                   <h3 className="text-2xl pb-5 pt-3 font-semibold text-center text-gray-700">
-                    STUDENT LOGIN
+                    LOGIN
                   </h3>
                   <div
                     className={`flex flex-row p-4 px-10 mb-2 ${
@@ -262,7 +262,7 @@ export default function Home() {
                 </form>
               </div>
             </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
+            {/* <CustomTabPanel value={value} index={1}>
               <div className="flex justify-center">
                 <form>
                   <h3 className="text-2xl pb-5 pt-3 font-semibold text-center text-gray-700">
@@ -348,7 +348,7 @@ export default function Home() {
                   </div>
                 </form>
               </div>
-            </CustomTabPanel>
+            </CustomTabPanel> */}
           </Box>
         </Container>
       </div>

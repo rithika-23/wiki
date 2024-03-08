@@ -8,6 +8,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import WikipediaSearch from "../WikipediaSearch";
 
 const UnauthenticatedDashboard = () => (
   <>
@@ -49,91 +50,10 @@ function a11yProps(index) {
 }
 
 const AuthenticatedDashboard = ({ token }) => {
-  const [value, setValue] = React.useState(0);
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/api/v1/courses/get-all-courses?token=${token}`
-        );
-        setCourses(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError("Error fetching data. Please try again later.");
-        setLoading(false);
-      }
-    };
-
-    fetchCourses();
-  }, [token]);
-
-  const renderCourseRow = (courseList, isUpcoming) => {
-    if (courseList.length === 0) {
-      return (
-        <h1 className="text-5xl flex justify-center items-center">
-          No Courses Available
-        </h1>
-      );
-    }
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "20px",
-          justifyContent: "flex-start",
-        }}
-      >
-        {courseList.map((course) => (
-          <Card key={course.id} course={course} isUpcoming={isUpcoming} />
-        ))}
-      </div>
-    );
-  };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-
   return (
     <div>
       <UserNavbar />
-      <div className="min-h-[80vh]  ">
-        <Box sx={{ width: "100%" }}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="dashboard tabs"
-            >
-              <Tab label="Active Courses" {...a11yProps(0)} />
-              <Tab label="Upcoming Courses" {...a11yProps(1)} />
-            </Tabs>
-          </Box>
-          <div className="flex ">
-            <CustomTabPanel value={value} index={0}>
-              {renderCourseRow(
-                courses.filter((course) => course.active === 1),
-                false
-              )}
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-              {renderCourseRow(
-                courses.filter((course) => course.upcoming === 1),
-                true
-              )}
-            </CustomTabPanel>
-          </div>
-        </Box>
-      </div>
+     <WikipediaSearch/>
     </div>
   );
 };

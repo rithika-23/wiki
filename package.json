@@ -6,6 +6,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
+    "@google-cloud/translate": "^8.1.0",
     "@mui/icons-material": "^5.15.4",
     "@mui/material": "^5.15.4",
     "@mui/styled-engine-sc": "^6.0.0-alpha.12",

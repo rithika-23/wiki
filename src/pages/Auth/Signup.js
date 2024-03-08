@@ -19,12 +19,15 @@ const Signup = () => {
   const navigate = useNavigate();
   const [transaction, setTransaction] = useState("");
   const handleSubmit1 = async (formData) => {
+    console.log("HEllo1")
     try {
       if (formData.password !== formData.confirmPassword) {
         toast.error("Passwords do not match");
         return;
       }
-
+      console.log("Hello2")
+      submitForm();
+      console.log("HEllo3")
       const options = {
         key: "rzp_test_UpiX9NbPDSPRE9",
         key_secret: "xEfrmNVHeJldfK0klLrczorH",
@@ -65,12 +68,14 @@ const Signup = () => {
 
   const submitForm = async (formData) => {
     try {
+      console.log("sjd", formData)
+      console.log("HEllo4", confirmPassword, data1)
       const { confirmPassword, ...data1 } = formData;
       const response = await axios.post(
         "http://localhost:8000/api/v1/auth/register",
         data1
       );
-      // console.log(formData);
+      console.log(formData);
       // const data = response.data;
 
       toast.success("Successfully registered");
@@ -114,7 +119,7 @@ const Signup = () => {
         <form onSubmit={handleSubmit(handleSubmit1)}>
           <div style={sectionStyle}>
             <Typography variant="h5" mb={2}>
-              Section 1: Personal Details
+              Details
             </Typography>
 
             <div style={columnsContainerStyle}>
@@ -129,15 +134,15 @@ const Signup = () => {
                 {...register("name")}
               />
 
-              <TextField
+              {/* <TextField
                 label="Roll No"
                 variant="outlined"
                 required
                 style={fieldStyle}
                 {...register("rollNumber")}
-              />
+              /> */}
 
-              <TextField
+              {/* <TextField
                 label=" Year"
                 select
                 variant="outlined"
@@ -206,7 +211,7 @@ const Signup = () => {
                     {admission}
                   </MenuItem>
                 ))}
-              </TextField>
+              </TextField> */}
 
               <TextField
                 label="Gender"
@@ -255,7 +260,7 @@ const Signup = () => {
                 {...register("currentAddress")}
               />
 
-              <TextField
+              {/* <TextField
                 label="Permanent Address"
                 variant="outlined"
                 style={fieldStyle}
@@ -269,22 +274,22 @@ const Signup = () => {
                 required
                 style={fieldStyle}
                 {...register("laptop")}
-              >
-                <MenuItem value="Yes">Yes</MenuItem>
+              > */}
+                {/* <MenuItem value="Yes">Yes</MenuItem>
                 <MenuItem value="No">No</MenuItem>
-              </TextField>
+              </TextField> */}
               {/* Add more fields as needed */}
             </div>
           </div>
 
-          {/* Section 2 */}
+          {/* Section 2
           <div style={sectionStyle}>
             <Typography variant="h5" mb={2}>
               Section 2: Parents Details
-            </Typography>
-            <div style={columnsContainerStyle}>
+            </Typography> */}
+            {/* <div style={columnsContainerStyle}> */}
               {/* Fields for Section 2 */}
-              <TextField
+              {/* <TextField
                 label="Father's Name"
                 variant="outlined"
                 required
@@ -352,16 +357,16 @@ const Signup = () => {
                 required
                 style={fieldStyle}
                 {...register("motherAddress")}
-              />
+              /> */}
 
               {/* Add more fields for Section 2 */}
-            </div>
-          </div>
+            {/* </div>
+          </div> */}
 
           {/* Section 3 */}
 
           <Typography variant="h5" mb={2}>
-            Section 3: Authentication
+            Authentication
           </Typography>
           <div style={sectionStyle} className="mr-10">
             <div style={columnsContainerStyle}>
@@ -426,7 +431,7 @@ const Signup = () => {
               }}
               disabled={Object.keys(errors).length !== 0}
             >
-              Create Account and Pay
+              Create Account
             </Button>
           </div>
         </form>
