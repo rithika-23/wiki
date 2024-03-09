@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Card from "./Card";
+import jsPDF from "jspdf";
 import { Link, useLocation } from "react-router-dom";
 import UserNavbar from "../../components/UserNavbar";
 import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import WikipediaSearch from "../WikipediaSearch";
-
+import Footer from "../Footer";
 const UnauthenticatedDashboard = () => (
   <>
     <h1>Please login to access the dashboard</h1>
@@ -54,6 +51,7 @@ const AuthenticatedDashboard = ({ token }) => {
     <div>
       <UserNavbar />
      <WikipediaSearch/>
+     <Footer/>
     </div>
   );
 };

@@ -22,7 +22,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    fetchHeader(); // Fetch the header when the component mounts
+    fetchHeader(); 
   }, []);
 
   const handleMenu = (event) => {
@@ -46,11 +46,10 @@ const Navbar = () => {
 
   return (
     <div className="p-4 bg-slate-100">
-      {/*total navbar */}
+      
       <div className=" flex justify-between">
-        {/* flex div*/}
+       
         <div className="flex gap-4">
-          {/* left block logo and header*/}
           <img
             src="/images/vnrLogo.png"
             alt="none"
@@ -60,7 +59,7 @@ const Navbar = () => {
           <h1 className="text-xl font-semibold">{header}</h1>
         </div>
         <div className="flex gap-4">
-          {/*right block */}
+       
           {role == "user" ? (
             <>
               <IconButton

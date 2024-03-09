@@ -10,6 +10,7 @@ import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import axios from "axios";
+import GoogleTranslateComponent from "../pages/GoogleTranslateComponent";
 
 
 
@@ -76,7 +77,7 @@ export default function UserNavbar() {
   
   return (
     <div className="flex w-full justify-center shadow-md">
-      <div className=" h-[10vh] flex items-center justify-between w-[95vw]">
+      <div className=" h-[12vh] flex items-center justify-between w-[95vw]">
         <div className="flex gap-4 ">
           <div>
             <img
@@ -98,56 +99,15 @@ export default function UserNavbar() {
             >
               {header && <span>{header}</span>}
             </Typography>
+            <p style={{fontFamily:"Times New Roman"}}>The User Encyclopedia</p>
           </div>
         </div>
+      
         <div>
           {auth?.token ? (
-            // <div>
-            //   <IconButton
-            //     size="large"
-            //     aria-label="account of current user"
-            //     aria-controls="menu-appbar"
-            //     aria-haspopup="true"
-            //     onClick={handleMenu}
-            //     color="black"
-            //     style={{ fontSize: "35px" }}
-            //   >
-            //     <AccountCircle fontSize="inherit" />
-            //   </IconButton>
-            //   <Menu
-            //     id="menu-appbar"
-            //     anchorEl={anchorEl}
-            //     anchorOrigin={{
-            //       vertical: "top",
-            //       horizontal: "right",
-            //     }}
-            //     keepMounted
-            //     transformOrigin={{
-            //       vertical: "top",
-            //       horizontal: "right",
-            //     }}
-            //     open={Boolean(anchorEl)}
-            //     onClose={handleClose}
-            //   >
-            //     <MenuItem onClick={handleChangePassword}>
-            //       Change Password
-            //     </MenuItem>
-
-            //     <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            //   </Menu>
-            // </div>
-            <div>
-              <Button
-                variant={isHovered[0] ? "contained" : "outlined"}
-                onMouseEnter={() => setIsHovered([true, false])}
-                onMouseLeave={() => setIsHovered([false, false])}
-                style={{
-                  "&:hover": { backgroundColor: "#your-hover-color" },
-                }}
-                onClick={handleChangePassword}
-              >
-                Change Password
-              </Button>
+          
+            <div className="flex gap-2 items-center">
+                <GoogleTranslateComponent/>
               {"          "}
               <Button
                 variant={isHovered[1] ? "contained" : "outlined"}
@@ -155,6 +115,7 @@ export default function UserNavbar() {
                 onMouseLeave={() => setIsHovered([false, false])}
                 style={{
                   "&:hover": { backgroundColor: "#your-hover-color" },
+                  height:"30px"
                 }}
                 onClick={handleLogout}
               >

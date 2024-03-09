@@ -7,7 +7,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
-import ChangePassword from "./pages/Auth/ChangePassword";
 import Home from "./components/Home";
 // import Wikisearch from "./pages/Wikisearch";
 
@@ -20,10 +19,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
-        <Route
-          path="/change-password/:id/:token"
-          element={<ChangePassword />}
-        />
+       
 
         <Route path="/dashboard/:token" element={<UserDashboard />} />
         <Route
