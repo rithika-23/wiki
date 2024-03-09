@@ -1,12 +1,10 @@
 import React from 'react';
-import styles from '../styles/Footer'; // Adjust the path based on your project structure
-import { grey } from '@mui/material/colors';
+import styles from '../styles/Footer'; 
 
 const Footer = () => {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
      
-      {/* Footer with fixed position at the bottom */}
       <footer style={{ position: 'fixed', bottom: 0,padding:'20px', width: '100%', backgroundColor: '#f6f6f6' }}>
         <p style={{ display: 'flex', alignItems: 'center' }}>
           <span>&copy; 2024</span> Your Wikipedia-style Website. All rights reserved. | 

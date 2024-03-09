@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
 import { FaDownload } from "react-icons/fa6";
-import myImage from '../img.png';
+import myImage from "../img.png";
 import jsPDF from "jspdf";
 const WikipediaSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [error, setError] = useState(null);
-  //styling
   const [fontFamily, setfontFamily] = useState("");
   const [fontColor, setFontColor] = useState("#000000");
   const [lineSpacing, setLineSpacing] = useState(1.5);
@@ -24,15 +23,6 @@ const WikipediaSearch = () => {
     setFontColor(fontColor);
     setLineSpacing(lineSpacing);
   };
-
-  // const handleApplyCustomStyles = () => {
-  //   setIsCustomizing(false);
-  //   applyCustomStyles({
-  //     fontSizeOption: ${fontSizeOption}px,
-  //     fontColor,
-  //     lineSpacing,
-  //   });
-  // };
 
   const previewStyle = {
     fontSize:
@@ -53,7 +43,7 @@ const WikipediaSearch = () => {
   const handleChange = (event) => {
     setSearch(true);
     setSearchTerm(event.target.value);
-    setSelectedOption(null); // Reset selected option when the search term changes
+    setSelectedOption(null);
   };
 
   const [selectedOptionResult, setSelectedOptionResult] = useState("");
@@ -64,26 +54,17 @@ const WikipediaSearch = () => {
       const url = `https://nexpedia.onrender.com/api/wiki/${event.title}`;
       const response = await fetch(url);
       const data = await response.json();
-      // console.log(data,'///')
       setSelectedOptionResult(data);
-      setError(null); // Clear any previous error
+      setError(null);
     } catch (error) {
-      // console.log('llllll')
       console.error("Error fetching data:", error);
       setError("Failed to fetch data.");
     }
   };
 
-  const handleClearStyles = () => {
-    setCustomFontSize("");
-    setFontColor("#000000");
-    setFontSizeOption(16);
-    setLineSpacing(1.5);
-  };
-
   const handleCustomButtonClick = () => {
     setIsCustomizing(!isCustomizing);
-    console.log("Custom button clicked!");
+    
   };
 
   const fetchData = async () => {
@@ -94,7 +75,7 @@ const WikipediaSearch = () => {
 
       if (data.query && data.query.search) {
         setSearchResults(data.query.search);
-        setError(null); // Clear any previous error
+        setError(null);
       } else {
         setSearchResults([]);
         setError("No relevant results found.");
@@ -106,9 +87,7 @@ const WikipediaSearch = () => {
   };
 
   const handleFontSizeChange = (value) => {
-    console.log("VALUE", value);
     setFontSizeOption(value);
-    // Reset custom font size when selecting an option from the dropdown
     setCustomFontSize("");
   };
 
@@ -118,22 +97,12 @@ const WikipediaSearch = () => {
     }
   }, [searchTerm]);
 
-  // ... (other code)
-
   function readText() {
     setReading(true);
     const textToRead = document.getElementById("textToRead").textContent;
-
-    // Check if the browser supports the SpeechSynthesis API
     if ("speechSynthesis" in window) {
       const synthesis = window.speechSynthesis;
       const utterance = new SpeechSynthesisUtterance(textToRead);
-
-      // You can configure additional properties of the utterance here
-      // For example:
-      // utterance.lang = 'en-US';
-      // utterance.rate = 1.0; // Speed of speech
-
       synthesis.speak(utterance);
     } else {
       alert("Text-to-speech is not supported in this browser.");
@@ -171,58 +140,49 @@ const WikipediaSearch = () => {
       if (text) {
         setSelectedText(selection);
       } else {
-        setSelectedText(null); // Clear selectedText if no text is selected
+        setSelectedText(null);
       }
     }
   };
 
   const handleColorChange = (color) => {
-    setSelectedText(null); // Clear selectedText when a color button is clicked
-    applyBackgroundColor(color, !selectedText); // Apply color to entire text if no text is selected
-  };
-
-  const handleClearBackground = () => {
-    setSelectedText(null); // Clear selected text
-    applyBackgroundColor("white", true); // Set background color of entire text to white
+    setSelectedText(null);
+    applyBackgroundColor(color, !selectedText);
   };
 
   const applyBackgroundColor = (color, applyToEntireText = false) => {
-    console.log(color, "apply");
     if (applyToEntireText) {
-      console.log(color, "apply");
       const range = document.createRange();
       range.selectNodeContents(contentRef.current);
       const newNode = document.createElement("span");
       newNode.style.backgroundColor = color;
       range.surroundContents(newNode);
-      setSelectedColor(color); // Update selected color
+      setSelectedColor(color);
     } else {
       if (selectedText) {
         const range = selectedText.getRangeAt(0);
         const newNode = document.createElement("span");
         newNode.style.backgroundColor = color;
         range.surroundContents(newNode);
-        setSelectedColor(color); // Update selected color
+        setSelectedColor(color);
       }
     }
   };
 
   const applyTextFormatting = (type, applyToEntireText = false) => {
-    let styleValue = ""; // Initialize the style value based on the type
-
-    // Determine the style value based on the type
+    let styleValue = "";
     switch (type) {
       case "bold":
-        styleValue = fontweight ? "normal" : "bold"; // Toggle bold style
-        setFontweight(!fontweight); // Toggle state
+        styleValue = fontweight ? "normal" : "bold";
+        setFontweight(!fontweight);
         break;
       case "underline":
-        styleValue = underline ? "none" : "underline"; // Toggle underline style
-        setUnderline(!underline); // Toggle state
+        styleValue = underline ? "none" : "underline";
+        setUnderline(!underline);
         break;
       case "italic":
-        styleValue = italic ? "normal" : "italic"; // Toggle italic style
-        setItalic(!italic); // Toggle state
+        styleValue = italic ? "normal" : "italic";
+        setItalic(!italic);
         break;
       default:
         break;
@@ -233,28 +193,23 @@ const WikipediaSearch = () => {
       range.selectNodeContents(contentRef.current);
       const newNode = document.createElement("span");
       newNode.style[type === "underline" ? "textDecoration" : "fontWeight"] =
-        styleValue; // Apply style
+        styleValue;
       range.surroundContents(newNode);
     } else {
       if (selectedText) {
         const range = selectedText.getRangeAt(0);
         const newNode = document.createElement("span");
         newNode.style[type === "underline" ? "textDecoration" : "fontWeight"] =
-          styleValue; // Apply style
+          styleValue;
         range.surroundContents(newNode);
       }
     }
   };
 
   const downloadPDF = () => {
-    // Create a new jsPDF instance
     const doc = new jsPDF();
-
-    // Set font size and type
     doc.setFontSize(fontSizeOption);
     doc.setFont(fontFamily, "normal");
-
-    // Set font size, type, style, and add underlining
     doc.setFontSize(fontSizeOption);
     doc.setFont(
       fontFamily,
@@ -266,19 +221,12 @@ const WikipediaSearch = () => {
         ? "italic"
         : "normal"
     );
-
-    doc.setTextColor(fontColor); // Set text color to green
-
-    // Calculate the center position for the title
+    doc.setTextColor(fontColor);
     const titleWidth =
       (doc.getStringUnitWidth(selectedOptionResult.query.pages[0].title) * 14) /
       doc.internal.scaleFactor;
     const titleX = (doc.internal.pageSize.width - titleWidth) / 2;
-
-    // Add the title in the center and bold
     doc.text(titleX, 50, selectedOptionResult.query.pages[0].title);
-
-    // Reset font size and type for the rest of the content
     doc.setFontSize(fontSizeOption);
     doc.setFont(
       fontFamily,
@@ -290,36 +238,25 @@ const WikipediaSearch = () => {
         ? "italic"
         : "normal"
     );
-
-    // Function to add justified text
     const addJustifiedText = (text, x, y, maxWidth) => {
-      doc.setTextColor(fontColor); // Set text color to green
+      doc.setTextColor(fontColor);
       doc.text(text, x, y, { maxWidth });
     };
-
-    let yOffset = 70; // Initial y-offset
-
-    // Add spacing before the extract
+    let yOffset = 70;
     yOffset += 10;
-
-    // Add the extract with justified text
     addJustifiedText(
       selectedOptionResult.query.pages[0].extract,
       20,
       yOffset,
       170
     );
-
-    // Save or display the PDF as needed
     doc.save(`${selectedOptionResult.query.pages[0].title}.pdf`);
   };
 
   return (
     <div className="grid grid-cols-12 ">
-      {/* Empty space (25%) */}
+    
       <div className="col-span-2"></div>
-
-      {/* Search Content (60%) */}
       <div className="col-span-7">
         <div className="w-[90%] mt-10">
           <h1 className="text-3xl font-bold mb-4">Wikipedia Search</h1>
@@ -344,11 +281,9 @@ const WikipediaSearch = () => {
               onClick={handleCustomButtonClick}
               className="mt-4 bg-[#4CAF50] text-white px-4 py-2 rounded ml-auto"
             >
-              Custom Button
+              Customize..
             </button>
           )}
-
-          {/* Search Results */}
           {search
             ? searchResults.length > 0 && (
                 <div className="mt-4">
@@ -373,7 +308,7 @@ const WikipediaSearch = () => {
                   </ul>
                 </div>
               )
-            : // Selected Option Result
+            : 
               selectedOptionResult && (
                 <div className="mt-5">
                   <div className="flex flex-row items-center gap-3">
@@ -398,16 +333,13 @@ const WikipediaSearch = () => {
                   </p>
                 </div>
               )}
-
-          {/* No results message */}
           {searchResults.length === 0 && !error && (
             <p className="mt-4">No results found.</p>
           )}
-          {searchTerm.length==0&&<img src={myImage} width={650}/>}
+          {searchTerm.length == 0 && <img src={myImage} width={650} />}
         </div>
       </div>
 
-      {/* Customization Controls (remaining space) */}
       <div className="col-span-3 mr-5 my-10">
         {isCustomizing && (
           <div className="mt-4">
@@ -418,11 +350,10 @@ const WikipediaSearch = () => {
                     {isCustomizing && (
                       <div className="m-5">
                         <div className="space-y-4">
-                          {/* Font Size Control */}
                           <div className="flex flex-col">
                             <label
                               htmlFor="fontSize"
-                              className="mr-2 text-blue-600 font-[600]"
+                              className="mr-2 text-blue-600 mb-1 font-[600]"
                             >
                               Font Size:
                             </label>
@@ -479,7 +410,7 @@ const WikipediaSearch = () => {
                               </option>
                             </select>
 
-                            <label htmlFor="fontFamily " className="mr-2 mt-5">
+                            <label htmlFor="fontFamily " className="text-blue-600 mb-1 font-[600] mr-2 mt-5">
                               Font Family:
                             </label>
                             <select
@@ -515,10 +446,7 @@ const WikipediaSearch = () => {
                               >
                                 Verdana
                               </option>
-                              {/* Add more font options as needed */}
                             </select>
-
-                            {/* Custom Font Size Input */}
                             {fontSizeOption === "custom" && (
                               <input
                                 type="number"
@@ -531,9 +459,8 @@ const WikipediaSearch = () => {
                               />
                             )}
                           </div>
-                          {/* Font Color Control */}
                           <div className="flex flex-col">
-                            <label htmlFor="fontColor" className="mr-2">
+                            <label htmlFor="fontColor" className="mr-2 text-blue-600 mb-1 font-[600]">
                               Font Color:
                             </label>
                             <input
@@ -543,9 +470,8 @@ const WikipediaSearch = () => {
                               className="border p-1"
                             />
                           </div>
-                          {/* Line Spacing Control */}
                           <div className="flex flex-col">
-                            <label htmlFor="lineSpacing" className="mr-2">
+                            <label htmlFor="lineSpacing" className="mr-2 text-blue-600 mb-1 font-[600]">
                               Line Spacing:
                             </label>
                             <input
@@ -555,30 +481,25 @@ const WikipediaSearch = () => {
                               onChange={(e) =>
                                 setLineSpacing(parseFloat(e.target.value))
                               }
-                              className="border p-1"
+                              className="border p-1 "
                             />
                           </div>
-                          {/* Bold Button */}
                           <button
                             onClick={() => {
                               setFontweight(!fontweight);
-                              // applyTextFormatting("bold");
                             }}
                             className="bg-gray-300 text-gray-800 px-4 py-2 rounded font-semibold mr-4"
                           >
                             B
                           </button>
-                          {/* Italic Button */}
                           <button
                             onClick={() => {
                               setItalic(!italic);
-                              // applyTextFormatting("italic");
                             }}
                             className="bg-gray-300 text-gray-800 px-4 py-2 rounded font-italic mr-4"
                           >
                             I
                           </button>
-                          {/* Underline Button */}
                           <button
                             onClick={() => {
                               setUnderline(!underline);
@@ -588,7 +509,7 @@ const WikipediaSearch = () => {
                           >
                             U
                           </button>
-                          <p>Highlight your text:</p>
+                          <p className="text-blue-600 mb-1 font-[600]">Highlight your text:</p>
                           {colors.map((color, index) => (
                             <button
                               key={index}
@@ -603,19 +524,6 @@ const WikipediaSearch = () => {
                               onClick={() => handleColorChange(color)}
                             ></button>
                           ))}
-                          {/* Apply Button */}
-                          {/* <button
-                            onClick={handleApplyCustomStyles}
-                            className="bg-[#4CAF50] text-white px-4 py-2 rounded self-center"
-                          >
-                            Apply
-                          </button>
-                          <button
-                            onClick={handleClearStyles}
-                            className="bg-red-500 text-white px-4 py-2 rounded"
-                          >
-                            Clear Styles
-                          </button> */}
                           <button
                             className="flex flex-row gap-2 bg-[#5655c6] text-white px-4 py-2 rounded items-center"
                             onClick={() => downloadPDF()}
@@ -628,7 +536,6 @@ const WikipediaSearch = () => {
                   </div>
                 </div>
               )}{" "}
-              {/* Your existing customization controls */}
             </div>
           </div>
         )}

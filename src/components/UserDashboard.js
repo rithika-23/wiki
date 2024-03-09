@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import { Link, useLocation } from "react-router-dom";
-import UserNavbar from "../../components/UserNavbar";
+import UserNavbar from "./UserNavbar";
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import WikipediaSearch from "../WikipediaSearch";
-import Footer from "../Footer";
+import WikipediaSearch from "./WikipediaSearch";
+import Footer from "./Footer";
 const UnauthenticatedDashboard = () => (
   <>
     <h1>Please login to access the dashboard</h1>
