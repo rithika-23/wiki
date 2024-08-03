@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
 import { FaDownload } from "react-icons/fa6";
 import myImage from "../img.png";
+import { useMediaQuery } from "react-responsive";
+import Modal from "react-bootstrap/Modal";
 import jsPDF from "jspdf";
 const WikipediaSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -57,10 +59,10 @@ const WikipediaSearch = () => {
 
   const handleCustomButtonClick = () => {
     setIsCustomizing(!isCustomizing);
-    
+    if (isSmallScreen) setIsModalOpen(!isModalOpen);
   };
 
-  const fetchData = useCallback (async() => {
+  const fetchData = useCallback(async () => {
     try {
       const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=${searchTerm}&utf8=1&formatversion=2&origin=*`;
       const response = await fetch(url);
@@ -77,7 +79,7 @@ const WikipediaSearch = () => {
       console.error("Error fetching data:", error);
       setError("Failed to fetch data.");
     }
-  },[searchTerm])
+  }, [searchTerm]);
 
   const handleFontSizeChange = (value) => {
     setFontSizeOption(value);
@@ -88,7 +90,7 @@ const WikipediaSearch = () => {
     if (searchTerm) {
       fetchData();
     }
-  }, [searchTerm,fetchData]);
+  }, [searchTerm, fetchData]);
 
   function readText() {
     setReading(true);
@@ -111,7 +113,7 @@ const WikipediaSearch = () => {
 
   const contentRef = useRef(null);
   const [selectedText, setSelectedText] = useState(null);
-  
+
   const colors = [
     "yellow",
     "cyan",
@@ -150,14 +152,12 @@ const WikipediaSearch = () => {
       const newNode = document.createElement("span");
       newNode.style.backgroundColor = color;
       range.surroundContents(newNode);
-      
     } else {
       if (selectedText) {
         const range = selectedText.getRangeAt(0);
         const newNode = document.createElement("span");
         newNode.style.backgroundColor = color;
         range.surroundContents(newNode);
-        
       }
     }
   };
@@ -245,15 +245,15 @@ const WikipediaSearch = () => {
     );
     doc.save(`${selectedOptionResult.query.pages[0].title}.pdf`);
   };
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 641px)" });
+  console.log(isModalOpen, isSmallScreen);
   return (
-    <div className="grid grid-cols-12 ">
-    
-      <div className="col-span-2"></div>
-      <div className="col-span-7">
-        <div className="w-[90%] mt-10">
-          <h1 className="text-3xl font-bold mb-4">Wikipedia Search</h1>
-          <div className="flex items-center space-x-4">
+    <div className="flex flex-row m-5 justify-between gap-5">
+      <div className="w-full md:w-[75%]">
+        <div className=" mt-10">
+          <p className="text-xl md:text-2xl font-bold mb-4">Wikipedia Search</p>
+          <div className="flex items-center  gap-2">
             <input
               className="border border-[#5655c6] p-2 flex-grow"
               type="text"
@@ -261,39 +261,34 @@ const WikipediaSearch = () => {
               onChange={handleChange}
               placeholder="Enter search term"
             />
-            <button
-              onClick={fetchData}
-              className="bg-[#5655c6] text-white px-4 py-2 rounded"
-            >
-              Search
-            </button>
+            
           </div>
           {error && <p className="text-red-500 mt-2">{error}</p>}
-          {!search && (
+          {!search && isSmallScreen && (
             <button
               onClick={handleCustomButtonClick}
-              className="mt-4 bg-[#4CAF50] text-white px-4 py-2 rounded ml-auto"
+              className="text-sm mt-4 bg-[#4CAF50] text-white px-4 py-2 rounded ml-auto"
             >
               Customize..
             </button>
           )}
           {search
             ? searchResults.length > 0 && (
-                <div className="mt-4">
-                  <label htmlFor="searchOptions" className="font-semibold mb-2">
+                <div className="">
+                  <label htmlFor="searchOptions" className="font-semibold my-2">
                     Select an option:
                   </label>
                   <ul className="p-2 w-full" style={{ textAlign: "justify" }}>
                     {searchResults.map((result) => (
                       <li key={result.pageid} className="mb-2">
                         <p
-                          className="cursor-pointer text-lg text-blue-500 font-bold hover:underline"
+                          className="cursor-pointer text-sm md:text-md text-blue-500 font-bold hover:underline"
                           onClick={() => handleSelectOption(result)}
                         >
                           {result.title}
                         </p>
                         <p
-                          className="text-lg text-gray-600"
+                          className="text-xs md:text-sm text-gray-600"
                           dangerouslySetInnerHTML={{ __html: result.snippet }}
                         />
                       </li>
@@ -301,25 +296,23 @@ const WikipediaSearch = () => {
                   </ul>
                 </div>
               )
-            : 
-              selectedOptionResult && (
+            : selectedOptionResult && (
                 <div className="mt-5">
-                  <div className="flex flex-row items-center gap-3">
-                    <p style={{ fontSize: "20px" }} className="font-semibold">
+                  <div className="flex flex-row items-center gap-2">
+                    <p className="font-semibold text-md md:text-xl mt-2">
                       {selectedOptionResult.query.pages[0].title}
                     </p>
                     {reading ? (
-                      <HiMiniSpeakerXMark onClick={stopReading} size={25} />
+                      <HiMiniSpeakerXMark onClick={stopReading} size={20} />
                     ) : (
-                      <HiMiniSpeakerWave onClick={readText} size={25} />
+                      <HiMiniSpeakerWave onClick={readText} size={20} />
                     )}
                   </div>
                   <p
                     style={previewStyle}
                     id="textToRead"
-                    className="highlighted text-lg text-gray-600 mt-5 p-3 "
+                    className="highlighted text-xs text-gray-600 "
                     ref={contentRef}
-                    contentEditable="true"
                     onMouseUp={handleMouseUp}
                   >
                     {selectedOptionResult.query.pages[0].extract}
@@ -329,210 +322,328 @@ const WikipediaSearch = () => {
           {searchResults.length === 0 && !error && (
             <p className="mt-4">No results found.</p>
           )}
-          {searchTerm.length === 0 && <img src={myImage} alt="wikipedia" width={650} />}
+          {searchTerm.length === 0 && (
+            <img src={myImage} alt="wikipedia" width={650} />
+          )}
         </div>
       </div>
 
-      <div className="col-span-3 mr-5 my-10">
-        {isCustomizing && (
-          <div className="mt-4">
-            <div className="space-y-4">
-              {isCustomizing && (
-                <div className="mt-4">
-                  <div className="space-y-4">
-                    {isCustomizing && (
-                      <div className="m-5">
-                        <div className="space-y-4">
-                          <div className="flex flex-col">
-                            <label
-                              htmlFor="fontSize"
-                              className="mr-2 text-blue-600 mb-1 font-[600]"
-                            >
-                              Font Size:
-                            </label>
-                            <select
-                              id="fontSize"
-                              value={fontSizeOption}
-                              onChange={(e) => {
-                                const inputValue = e.target.value;
-                                handleFontSizeChange(inputValue);
-                              }}
-                              className="border p-1"
-                            >
-                              <option
-                                value="10"
-                                style={{ fontSize: "12px", padding: "5px" }}
-                              >
-                                Smaller
-                              </option>
-                              <option
-                                value="12"
-                                style={{ fontSize: "14px", padding: "5px" }}
-                              >
-                                Small
-                              </option>
-                              <option
-                                value="14"
-                                style={{ fontSize: "16px", padding: "5px" }}
-                              >
-                                Default
-                              </option>
-                              <option
-                                value="16"
-                                style={{ fontSize: "18px", padding: "5px" }}
-                              >
-                                Medium
-                              </option>
-                              <option
-                                value="18"
-                                style={{ fontSize: "20px", padding: "5px" }}
-                              >
-                                Large
-                              </option>
-                              <option
-                                value="20"
-                                style={{ fontSize: "22px", padding: "5px" }}
-                              >
-                                Larger
-                              </option>
-                              <option
-                                value="custom"
-                                style={{ fontSize: "16px", padding: "5px" }}
-                              >
-                                Custom
-                              </option>
-                            </select>
-
-                            <label htmlFor="fontFamily " className="text-blue-600 mb-1 font-[600] mr-2 mt-5">
-                              Font Family:
-                            </label>
-                            <select
-                              id="fontStyle"
-                              value={fontFamily}
-                              onChange={(e) => {
-                                const selectedValue = e.target.value;
-                                setfontFamily(selectedValue);
-                              }}
-                              className="border p-1"
-                            >
-                              <option
-                                value="arial"
-                                style={{ fontFamily: "Arial" }}
-                              >
-                                Arial
-                              </option>
-                              <option
-                                value="times"
-                                style={{ fontFamily: "Times New Roman" }}
-                              >
-                                Times New Roman
-                              </option>
-                              <option
-                                value="courier"
-                                style={{ fontFamily: "Courier New" }}
-                              >
-                                Courier New
-                              </option>
-                              <option
-                                value="helvetica"
-                                style={{ fontFamily: "Verdana" }}
-                              >
-                                Verdana
-                              </option>
-                            </select>
-                            {fontSizeOption === "custom" && (
-                              <input
-                                type="number"
-                                value={customFontSize}
-                                onChange={(e) =>
-                                  setCustomFontSize(e.target.value)
-                                }
-                                placeholder="Custom size"
-                                className="border p-1 mt-2"
-                              />
-                            )}
-                          </div>
-                          <div className="flex flex-col">
-                            <label htmlFor="fontColor" className="mr-2 text-blue-600 mb-1 font-[600]">
-                              Font Color:
-                            </label>
-                            <input
-                              type="color"
-                              value={fontColor}
-                              onChange={(e) => setFontColor(e.target.value)}
-                              className="border p-1"
-                            />
-                          </div>
-                          <div className="flex flex-col">
-                            <label htmlFor="lineSpacing" className="mr-2 text-blue-600 mb-1 font-[600]">
-                              Line Spacing:
-                            </label>
-                            <input
-                              type="number"
-                              value={lineSpacing}
-                              step="0.1"
-                              onChange={(e) =>
-                                setLineSpacing(parseFloat(e.target.value))
-                              }
-                              className="border p-1 "
-                            />
-                          </div>
-                          <button
-                            onClick={() => {
-                              setFontweight(!fontweight);
-                            }}
-                            className="bg-gray-300 text-gray-800 px-4 py-2 rounded font-semibold mr-4"
-                          >
-                            B
-                          </button>
-                          <button
-                            onClick={() => {
-                              setItalic(!italic);
-                            }}
-                            className="bg-gray-300 text-gray-800 px-4 py-2 rounded font-italic mr-4"
-                          >
-                            I
-                          </button>
-                          <button
-                            onClick={() => {
-                              setUnderline(!underline);
-                              applyTextFormatting("underline");
-                            }}
-                            className="bg-gray-300 text-gray-800 px-4 py-2 rounded underline mr-4"
-                          >
-                            U
-                          </button>
-                          <p className="text-blue-600 mb-1 font-[600]">Highlight your text:</p>
-                          {colors.map((color, index) => (
-                            <button
-                              key={index}
-                              className="color-button"
-                              style={{
-                                backgroundColor: color,
-                                width: "15px",
-                                height: "15px",
-                                borderRadius: "50%",
-                                margin: "8px",
-                              }}
-                              onClick={() => handleColorChange(color)}
-                            ></button>
-                          ))}
-                          <button
-                            className="flex flex-row gap-2 bg-[#5655c6] text-white px-4 py-2 rounded items-center"
-                            onClick={() => downloadPDF()}
-                          >
-                            Download <FaDownload />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}{" "}
+      {/* Content for larger screens */}
+      <div className="w-[25%] mr-5 my-10">
+        {!search && !isSmallScreen && (
+          <div className="">
+            <div className="flex flex-col m-3">
+              <label
+                htmlFor="fontSize"
+                className="mr-2 text-blue-600 mb-1 font-[600]"
+              >
+                Font Size:
+              </label>
+              <select
+                id="fontSize"
+                value={fontSizeOption}
+                onChange={(e) => handleFontSizeChange(e.target.value)}
+                className="border p-1"
+              >
+                <option value="10" style={{ fontSize: "12px", padding: "5px" }}>
+                  Smaller
+                </option>
+                <option value="12" style={{ fontSize: "14px", padding: "5px" }}>
+                  Small
+                </option>
+                <option value="14" style={{ fontSize: "16px", padding: "5px" }}>
+                  Default
+                </option>
+                <option value="16" style={{ fontSize: "18px", padding: "5px" }}>
+                  Medium
+                </option>
+                <option value="18" style={{ fontSize: "20px", padding: "5px" }}>
+                  Large
+                </option>
+                <option value="20" style={{ fontSize: "22px", padding: "5px" }}>
+                  Larger
+                </option>
+                <option
+                  value="custom"
+                  style={{ fontSize: "16px", padding: "5px" }}
+                >
+                  Custom
+                </option>
+              </select>
+              {fontSizeOption === "custom" && (
+                <input
+                  type="number"
+                  value={customFontSize}
+                  onChange={(e) => setCustomFontSize(e.target.value)}
+                  placeholder="Custom size"
+                  className="border p-1 my-2"
+                />
+              )}
             </div>
+            <div className="flex flex-col m-3">
+              <label
+                htmlFor="fontFamily"
+                className="text-blue-600 mb-1 font-[600] mr-2 "
+              >
+                Font Family:
+              </label>
+              <select
+                id="fontStyle"
+                value={fontFamily}
+                onChange={(e) => setfontFamily(e.target.value)}
+                className="border p-1"
+              >
+                <option value="arial" style={{ fontFamily: "Arial" }}>
+                  Arial
+                </option>
+                <option value="times" style={{ fontFamily: "Times New Roman" }}>
+                  Times New Roman
+                </option>
+                <option value="courier" style={{ fontFamily: "Courier New" }}>
+                  Courier New
+                </option>
+                <option value="helvetica" style={{ fontFamily: "Verdana" }}>
+                  Verdana
+                </option>
+              </select>
+            </div>
+            <div className="flex flex-col m-3">
+              <label
+                htmlFor="fontColor"
+                className="mr-2 text-blue-600 mb-1 font-[600]"
+              >
+                Font Color:
+              </label>
+              <input
+                type="color"
+                value={fontColor}
+                onChange={(e) => setFontColor(e.target.value)}
+                className="border p-1"
+              />
+            </div>
+            <div className="flex flex-col m-3">
+              <label
+                htmlFor="lineSpacing"
+                className="mr-2 text-blue-600 mb-1 font-[600]"
+              >
+                Line Spacing:
+              </label>
+              <input
+                type="number"
+                value={lineSpacing}
+                step="0.1"
+                onChange={(e) => setLineSpacing(parseFloat(e.target.value))}
+                className="border p-1"
+              />
+            </div>
+            <div className="flex space-x-2 m-3">
+              <button
+                onClick={() => setFontweight(!fontweight)}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded font-semibold"
+              >
+                B
+              </button>
+              <button
+                onClick={() => setItalic(!italic)}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded font-italic"
+              >
+                I
+              </button>
+              <button
+                onClick={() => {
+                  setUnderline(!underline);
+                  applyTextFormatting("underline");
+                }}
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded underline"
+              >
+                U
+              </button>
+            </div>
+            <p className="text-blue-600 m-3 font-[600]">Highlight your text:</p>
+            <div className="flex flex-wrap space-x-2 m-3">
+              {colors.map((color, index) => (
+                <button
+                  key={index}
+                  className="color-button"
+                  style={{
+                    backgroundColor: color,
+                    width: "15px",
+                    height: "15px",
+                    borderRadius: "50%",
+                  }}
+                  onClick={() => handleColorChange(color)}
+                />
+              ))}
+            </div>
+            <button
+              className="flex flex-row gap-2 bg-[#5655c6] text-white px-4 py-2 m-3 rounded items-center"
+              onClick={downloadPDF}
+            >
+              Download <FaDownload />
+            </button>
           </div>
         )}
       </div>
+
+      {/* Modal for smaller screens */}
+
+      <Modal show={isModalOpen} onBackdropClick={handleCustomButtonClick} onHide={handleCustomButtonClick} centered>
+      <Modal.Header closeButton>
+        <h4>Customize</h4>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="px-3 pb-2 ">
+          <div className="flex flex-col m-3">
+            <label
+              htmlFor="fontSize"
+              className="mr-2 text-blue-600 mb-1 font-[600]"
+            >
+              Font Size:
+            </label>
+            <select
+              id="fontSize"
+              value={fontSizeOption}
+              onChange={(e) => handleFontSizeChange(e.target.value)}
+              className="border p-1"
+            >
+              <option value="10" style={{ fontSize: "12px", padding: "5px" }}>
+                Smaller
+              </option>
+              <option value="12" style={{ fontSize: "14px", padding: "5px" }}>
+                Small
+              </option>
+              <option value="14" style={{ fontSize: "16px", padding: "5px" }}>
+                Default
+              </option>
+              <option value="16" style={{ fontSize: "18px", padding: "5px" }}>
+                Medium
+              </option>
+              <option value="18" style={{ fontSize: "20px", padding: "5px" }}>
+                Large
+              </option>
+              <option value="20" style={{ fontSize: "22px", padding: "5px" }}>
+                Larger
+              </option>
+              <option
+                value="custom"
+                style={{ fontSize: "16px", padding: "5px" }}
+              >
+                Custom
+              </option>
+            </select>
+            {fontSizeOption === "custom" && (
+              <input
+                type="number"
+                value={customFontSize}
+                onChange={(e) => setCustomFontSize(e.target.value)}
+                placeholder="Custom size"
+                className="border p-1 my-2"
+              />
+            )}
+          </div>
+          <div className="flex flex-col m-3">
+            <label
+              htmlFor="fontFamily"
+              className="text-blue-600 mb-1 font-[600] mr-2 "
+            >
+              Font Family:
+            </label>
+            <select
+              id="fontStyle"
+              value={fontFamily}
+              onChange={(e) => setfontFamily(e.target.value)}
+              className="border p-1"
+            >
+              <option value="arial" style={{ fontFamily: "Arial" }}>
+                Arial
+              </option>
+              <option value="times" style={{ fontFamily: "Times New Roman" }}>
+                Times New Roman
+              </option>
+              <option value="courier" style={{ fontFamily: "Courier New" }}>
+                Courier New
+              </option>
+              <option value="helvetica" style={{ fontFamily: "Verdana" }}>
+                Verdana
+              </option>
+            </select>
+          </div>
+          <div className="flex flex-col m-3">
+            <label
+              htmlFor="fontColor"
+              className="mr-2 text-blue-600 mb-1 font-[600]"
+            >
+              Font Color:
+            </label>
+            <input
+              type="color"
+              value={fontColor}
+              onChange={(e) => setFontColor(e.target.value)}
+              className="border p-1"
+            />
+          </div>
+          <div className="flex flex-col m-3">
+            <label
+              htmlFor="lineSpacing"
+              className="mr-2 text-blue-600 mb-1 font-[600]"
+            >
+              Line Spacing:
+            </label>
+            <input
+              type="number"
+              value={lineSpacing}
+              step="0.1"
+              onChange={(e) => setLineSpacing(parseFloat(e.target.value))}
+              className="border p-1"
+            />
+          </div>
+          <div className="flex space-x-2 m-3">
+            <button
+              onClick={() => setFontweight(!fontweight)}
+              className="bg-gray-300 text-gray-800 px-4 py-2 rounded font-semibold"
+            >
+              B
+            </button>
+            <button
+              onClick={() => setItalic(!italic)}
+              className="bg-gray-300 text-gray-800 px-4 py-2 rounded font-italic"
+            >
+              I
+            </button>
+            <button
+              onClick={() => {
+                setUnderline(!underline);
+                applyTextFormatting("underline");
+              }}
+              className="bg-gray-300 text-gray-800 px-4 py-2 rounded underline"
+            >
+              U
+            </button>
+          </div>
+          <p className="text-blue-600 m-3 font-[600]">Highlight your text:</p>
+          <div className="flex flex-wrap space-x-2 m-3">
+            {colors.map((color, index) => (
+              <button
+                key={index}
+                className="color-button"
+                style={{
+                  backgroundColor: color,
+                  width: "15px",
+                  height: "15px",
+                  borderRadius: "50%",
+                }}
+                onClick={() => handleColorChange(color)}
+              />
+            ))}
+          </div>
+          <button
+            className="flex flex-row gap-2 bg-[#5655c6] text-white px-4 py-2 m-3 rounded items-center"
+            onClick={downloadPDF}
+          >
+            Download <FaDownload />
+          </button>
+        </div></Modal.Body>
+      </Modal>
     </div>
   );
 };
