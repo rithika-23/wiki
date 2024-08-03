@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { HiMiniSpeakerWave, HiMiniSpeakerXMark } from "react-icons/hi2";
 import { FaDownload } from "react-icons/fa6";
 import myImage from "../img.png";
@@ -6,7 +6,6 @@ import jsPDF from "jspdf";
 const WikipediaSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [error, setError] = useState(null);
   const [fontFamily, setfontFamily] = useState("");
   const [fontColor, setFontColor] = useState("#000000");
@@ -18,11 +17,6 @@ const WikipediaSearch = () => {
   const [underline, setUnderline] = useState(false);
   const [italic, setItalic] = useState(false);
   const [reading, setReading] = useState(false);
-  const applyCustomStyles = ({ fontSizeOption, fontColor, lineSpacing }) => {
-    setFontSizeOption(fontSizeOption);
-    setFontColor(fontColor);
-    setLineSpacing(lineSpacing);
-  };
 
   const previewStyle = {
     fontSize:
@@ -43,7 +37,6 @@ const WikipediaSearch = () => {
   const handleChange = (event) => {
     setSearch(true);
     setSearchTerm(event.target.value);
-    setSelectedOption(null);
   };
 
   const [selectedOptionResult, setSelectedOptionResult] = useState("");
@@ -67,7 +60,7 @@ const WikipediaSearch = () => {
     
   };
 
-  const fetchData = async () => {
+  const fetchData = useCallback (async() => {
     try {
       const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=${searchTerm}&utf8=1&formatversion=2&origin=*`;
       const response = await fetch(url);
@@ -84,7 +77,7 @@ const WikipediaSearch = () => {
       console.error("Error fetching data:", error);
       setError("Failed to fetch data.");
     }
-  };
+  },[searchTerm])
 
   const handleFontSizeChange = (value) => {
     setFontSizeOption(value);
@@ -95,7 +88,7 @@ const WikipediaSearch = () => {
     if (searchTerm) {
       fetchData();
     }
-  }, [searchTerm]);
+  }, [searchTerm,fetchData]);
 
   function readText() {
     setReading(true);
@@ -118,7 +111,7 @@ const WikipediaSearch = () => {
 
   const contentRef = useRef(null);
   const [selectedText, setSelectedText] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null);
+  
   const colors = [
     "yellow",
     "cyan",
@@ -157,14 +150,14 @@ const WikipediaSearch = () => {
       const newNode = document.createElement("span");
       newNode.style.backgroundColor = color;
       range.surroundContents(newNode);
-      setSelectedColor(color);
+      
     } else {
       if (selectedText) {
         const range = selectedText.getRangeAt(0);
         const newNode = document.createElement("span");
         newNode.style.backgroundColor = color;
         range.surroundContents(newNode);
-        setSelectedColor(color);
+        
       }
     }
   };
@@ -336,7 +329,7 @@ const WikipediaSearch = () => {
           {searchResults.length === 0 && !error && (
             <p className="mt-4">No results found.</p>
           )}
-          {searchTerm.length == 0 && <img src={myImage} width={650} />}
+          {searchTerm.length === 0 && <img src={myImage} alt="wikipedia" width={650} />}
         </div>
       </div>
 

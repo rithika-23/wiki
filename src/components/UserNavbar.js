@@ -1,9 +1,4 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { IconButton, Menu, MenuItem, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
-import axios from "axios";
 import GoogleTranslateComponent from "./GoogleTranslateComponent";
 
 export default function UserNavbar() {
