@@ -321,7 +321,7 @@ const WikipediaSearch = () => {
         </div>
       </div>
 
-      {search ? (
+      {search&&!isSmallScreen ? (
         <div><img src={myImage} width={600} height={600} alt="wikipedia" /></div>
       ) : (
         !search &&
