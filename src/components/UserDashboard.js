@@ -4,7 +4,7 @@ import WikipediaSearch from "./WikipediaSearch";
 import Footer from "./Footer";
 function UserDashboard() {
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <UserNavbar />
       <WikipediaSearch />
       <Footer />
