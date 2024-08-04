@@ -245,6 +245,7 @@ const WikipediaSearch = () => {
   const isSmallScreen = useMediaQuery({ query: "(max-width: 641px)" });
 
   return (
+    <div>
     <div className="flex flex-row m-5 justify-between gap-5">
       <div className="w-100 md:w-[70%]">
         <div className=" ">
@@ -646,6 +647,9 @@ const WikipediaSearch = () => {
         </Modal.Body>
       </Modal>
     </div>
+   { isSmallScreen &&
+      <div><img src={myImage} width={600} height={600} alt="wikipedia" /></div>}
+      </div>
   );
 };
 
